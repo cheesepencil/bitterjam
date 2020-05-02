@@ -4,7 +4,7 @@
   "description": "An entry for Bitter Jam https://itch.io/jam/bitter-jam",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cheesepencil/bitterjam#readme",
   "devDependencies": {
+    "@types/node": "^13.13.4",
     "parcel-bundler": "^1.12.4",
     "phaser": "^3.23.0",
     "typescript": "^3.8.3"
