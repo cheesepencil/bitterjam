@@ -1,0 +1,24 @@
+{
+  "name": "bitterjam",
+  "version": "1.0.0",
+  "description": "An entry for Bitter Jam https://itch.io/jam/bitter-jam",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cheesepencil/bitterjam.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cheesepencil/bitterjam/issues"
+  },
+  "homepage": "https://github.com/cheesepencil/bitterjam#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "phaser": "^3.23.0",
+    "typescript": "^3.8.3"
+  }
+}
