@@ -4,7 +4,8 @@
   "description": "An entry for Bitter Jam https://itch.io/jam/bitter-jam",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html --public-url ./"
   },
   "repository": {
     "type": "git",
