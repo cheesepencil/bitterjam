@@ -170,7 +170,7 @@ export class MyGameScene extends Phaser.Scene {
 
         if (this.hero.x === this.goal.x && this.hero.y === this.goal.y) {
             this.sound.play('goal', { volume: 0.1 });
-
+            this.goal.destroy();
             if (this.level === this.maxLevel) {
                 this.steps += this.levelSteps;
                 console.log(`Completed the game in ${this.steps} steps!`);
