@@ -37,13 +37,13 @@ export class MyGameScene extends Phaser.Scene {
 
         // scene background color
         this.cameras.main.setBackgroundColor(sceneColor);
-        this.add.tween({
-            targets: [this.cameras.main.backgroundColor],
-            alpha: 128,
-            repeat: -1,
-            yoyo: true,
-            duration: 5000
-        });
+        // this.add.tween({
+        //     targets: [this.cameras.main.backgroundColor],
+        //     alpha: 128,
+        //     repeat: -1,
+        //     yoyo: true,
+        //     duration: 5000
+        // });
 
         // save randomizer for reboots
         if (data.restart) {
@@ -85,6 +85,13 @@ export class MyGameScene extends Phaser.Scene {
         this.maze = new Maze(mazeWidth, mazeHeight, this.randomizer);
         let path = this.add.rectangle(0, 0, this.maze.pixelWidth, this.maze.pixelHeight, pathColor)
             .setOrigin(0, 0);
+        this.add.tween({
+            targets: path,
+            alpha: 0,
+            duration: 5000,
+            repeat: -1,
+            yoyo: true
+        });
         for (let i = 0; i < this.maze.dungeon.length; i++) {
             for (let j = 0; j < this.maze.dungeon[i].length; j++) {
                 if (this.maze.dungeon[i][j]) {
@@ -117,11 +124,10 @@ export class MyGameScene extends Phaser.Scene {
 
     update(time: number, delta: number) {
         if (time > this.lastMove + 100) {
-            this.lastMove = time;
-            if (this.cursors.down.isDown) this.move('down');
-            else if (this.cursors.up.isDown) this.move('up');
-            else if (this.cursors.left.isDown) this.move('left');
-            else if (this.cursors.right.isDown) this.move('right');
+            if (this.cursors.down.isDown) this.move('down', time);
+            else if (this.cursors.up.isDown) this.move('up', time);
+            else if (this.cursors.left.isDown) this.move('left', time);
+            else if (this.cursors.right.isDown) this.move('right', time);
 
             // got lost lol
             if (this.cursors.space.isDown) {
@@ -136,9 +142,8 @@ export class MyGameScene extends Phaser.Scene {
         }
     }
 
-    move(direction: string) {
+    move(direction: string, time: number) {
         let destination = new Phaser.Geom.Point(this.hero.x / 8, this.hero.y / 8);
-
         switch (direction) {
             case 'up':
                 destination.y -= 1;
@@ -157,6 +162,7 @@ export class MyGameScene extends Phaser.Scene {
         if (this.maze.dungeon[destination.x][destination.y]) {
             // this.sound.play('bonk');
         } else {
+            this.lastMove = time;
             this.steps++;
             this.levelSteps++;
             this.sound.play('step');
