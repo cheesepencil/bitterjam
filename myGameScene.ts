@@ -126,19 +126,11 @@ export class MyGameScene extends Phaser.Scene {
             // got lost lol
             if (this.cursors.space.isDown) {
                 this.sound.play('bonk');
-                // this.scene.restart({
-                //     width: this.maze.width,
-                //     height: this.maze.height,
-                //     restart: true,
-                //     level: this.level
-                // });
-
                 this.scene.restart({
-                    width: this.maze.width + 3,
-                    height: this.maze.width + 3,
-                    restart: false,
-                    level: this.level + 1,
-                    steps: this.steps + this.levelSteps
+                    width: this.maze.width,
+                    height: this.maze.height,
+                    restart: true,
+                    level: this.level
                 });
             }
         }
