@@ -1,4 +1,5 @@
 import { Maze } from "./maze";
+import { Math } from "phaser";
 
 export class MyGameScene extends Phaser.Scene {
     hero: Phaser.GameObjects.Sprite;
@@ -92,7 +93,7 @@ export class MyGameScene extends Phaser.Scene {
             }
         }
 
-        // init hero, goal, and camera
+        // init hero, goal, and camera setup
         this.hero = this.add.sprite(8, 8, 'bitter-alpha', 16)
             .setOrigin(0, 0)
             .setTint(heroColor)
@@ -107,7 +108,7 @@ export class MyGameScene extends Phaser.Scene {
             repeat: -1,
             duration: 300
         })
-        this.cameras.main.centerOn(this.hero.x, this.hero.y);
+        this.updateCamera();
 
         // input
         this.lastMove = 0;
@@ -125,11 +126,19 @@ export class MyGameScene extends Phaser.Scene {
             // got lost lol
             if (this.cursors.space.isDown) {
                 this.sound.play('bonk');
+                // this.scene.restart({
+                //     width: this.maze.width,
+                //     height: this.maze.height,
+                //     restart: true,
+                //     level: this.level
+                // });
+
                 this.scene.restart({
-                    width: this.maze.width,
-                    height: this.maze.height,
-                    restart: true,
-                    level: this.level
+                    width: this.maze.width + 3,
+                    height: this.maze.width + 3,
+                    restart: false,
+                    level: this.level + 1,
+                    steps: this.steps + this.levelSteps
                 });
             }
         }
@@ -165,7 +174,7 @@ export class MyGameScene extends Phaser.Scene {
                 .setAlpha(0.2);
             this.hero.x = destination.x * 8;
             this.hero.y = destination.y * 8;
-            this.cameras.main.centerOn(this.hero.x, this.hero.y);
+            this.updateCamera();
         }
 
         if (this.hero.x === this.goal.x && this.hero.y === this.goal.y) {
@@ -221,7 +230,7 @@ export class MyGameScene extends Phaser.Scene {
 
         let stepString = this.steps.toString()
         for (let i = stepString.length - 1; i >= 0; i--) {
-            this.add.sprite(31 * 8 - ((stepString.length - 1 - i) * 4 * 8), 19 * 8 , 'numerals', stepString[i])
+            this.add.sprite(31 * 8 - ((stepString.length - 1 - i) * 4 * 8), 19 * 8, 'numerals', stepString[i])
                 .setScrollFactor(0)
                 .setScale(8)
                 .setOrigin(1, 0)
@@ -237,5 +246,38 @@ export class MyGameScene extends Phaser.Scene {
         let resultRgb = Phaser.Display.Color.HSVToRGB(h, hsv.s, hsv.v) as Phaser.Types.Display.ColorObject;
         let resultString = Phaser.Display.Color.GetColor(resultRgb.r, resultRgb.g, resultRgb.b);
         return resultString;
+    }
+
+    updateCamera() {
+        // if maze fits in screen space, just center it
+        if (this.maze.pixelHeight < 256) {
+            let screenHeight = 256;
+            let mazeHeight = this.maze.pixelHeight;
+            let difference = 256 - mazeHeight;
+            let halfDifference = difference / 2;
+            let factorOfEight = halfDifference - (halfDifference % 8);
+            this.cameras.main.scrollY = -factorOfEight;
+        } else {
+            // otherwise be smart
+            let heroCellY = this.hero.y / 8;
+            let progression = heroCellY / this.maze.blockHeight;
+            let scrollYUnfactoredRounded = Math.RoundTo((this.maze.pixelHeight - 256 + 8) * progression);
+            let scrollY = scrollYUnfactoredRounded - (scrollYUnfactoredRounded % 8);
+            this.cameras.main.scrollY = scrollY;
+        }
+        if (this.maze.pixelHeight < 256) {
+            let screenWidth = 256;
+            let mazeWidth = this.maze.pixelWidth;
+            let difference = 256 - mazeWidth;
+            let halfDifference = difference / 2;
+            let factorOfEight = halfDifference - (halfDifference % 8);
+            this.cameras.main.scrollX = -factorOfEight;
+        } else {
+            let heroCellX = this.hero.x / 8;
+            let progression = heroCellX / this.maze.blockWidth;
+            let scrollXUnfactoredRounded = Math.RoundTo((this.maze.pixelWidth - 256 + 8) * progression);
+            let scrollX = scrollXUnfactoredRounded - (scrollXUnfactoredRounded % 8);
+            this.cameras.main.scrollX = scrollX;
+        }
     }
 }
