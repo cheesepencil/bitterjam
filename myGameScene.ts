@@ -18,7 +18,7 @@ export class MyGameScene extends Phaser.Scene {
             key: 'MyGameScene'
         });
 
-        let seed = 'The rules keep changing...';
+        let seed = 'This jam had drama from day one!';
         this.randomizer = new Phaser.Math.RandomDataGenerator([seed])
     }
 
